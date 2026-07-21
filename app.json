@@ -19,6 +19,11 @@
         "backgroundColor": "#0A192F"
       },
       "package": "africa.njiabox.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1074acb8-e789-4160-81ac-9afd8973f446"
+      }
     }
   }
 }
