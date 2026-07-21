@@ -45,10 +45,10 @@ export const Colors = {
 
 export const Typography = {
   fontFamily: {
-    regular:  'Inter_400Regular',
-    medium:   'Inter_500Medium',
-    semiBold: 'Inter_600SemiBold',
-    bold:     'Inter_700Bold',
+    regular:  'System',
+    medium:   'System',
+    semiBold: 'System',
+    bold:     'System',
   },
   fontSize: {
     xs:   11,
