@@ -21,13 +21,8 @@
       },
       "package": "africa.njiabox.app"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": [],
     "extra": {
-      "router": {
-        "origin": false
-      },
       "eas": {
         "projectId": "1074acb8-e789-4160-81ac-9afd8973f446"
       }
