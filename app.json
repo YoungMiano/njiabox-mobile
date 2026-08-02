@@ -21,12 +21,17 @@
       },
       "package": "africa.njiabox.app"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "extra": {
-      "router": { "origin": false },
+      "router": {
+        "origin": false
+      },
       "eas": {
-        "projectId": "YOUR_PROJECT_ID"
+        "projectId": "1074acb8-e789-4160-81ac-9afd8973f446"
       }
-    }
+    },
+    "owner": "mianodev"
   }
 }
