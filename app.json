@@ -3,6 +3,7 @@
     "name": "NjiaBox",
     "slug": "njiabox",
     "version": "1.0.0",
+    "scheme": "njiabox",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,9 +21,11 @@
       },
       "package": "africa.njiabox.app"
     },
+    "plugins": ["expo-router"],
     "extra": {
+      "router": { "origin": false },
       "eas": {
-        "projectId": "1074acb8-e789-4160-81ac-9afd8973f446"
+        "projectId": "YOUR_PROJECT_ID"
       }
     }
   }
