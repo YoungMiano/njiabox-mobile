@@ -1,3 +1,4 @@
+import { api } from '../api/client';
 // =============================================================================
 // NjiaBox Mobile – MerchantBookingScreen.tsx
 // Milestone 5: Trader consignment booking with live freight cost estimation
@@ -138,19 +139,29 @@ export function MerchantBookingScreen(): React.JSX.Element {
 
     setIsSubmitting(true);
     try {
-      // In production: POST /api/v1/consignments with JWT auth header,
-      // then redirect to payment screen with the quoted rate.
-      // Here we simulate the async call with a delay.
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      const result = await api.createConsignment({
+        lengthCm: form.lengthCm,
+        widthCm: form.widthCm,
+        heightCm: form.heightCm,
+        actualWeightKg: form.actualWeightKg,
+        goodsDescription: form.goodsDescription,
+        declaredValueUsdCents: form.declaredValueUsd
+          ? Math.round(parseFloat(form.declaredValueUsd) * 100)
+          : 0,
+        routeCode: form.selectedRoute,
+        quantity: 1,
+        packageType: 'Box',
+        isFragile: false,
+        requiresRefrigeration: false,
+        hasInsurance: false,
+      }) as { trackingCode: string; quotedRateCents: number; quotedCurrency: string };
       Alert.alert(
-        '✅ Booking Submitted',
-        `Your consignment has been queued.\n\nEstimated cost: KES ${
-          preview.estimatedCostKes?.toLocaleString('en-KE') ?? '—'
-        }\n\nYou will receive a tracking code via WhatsApp once payment is confirmed.`,
+        '✅ Booking Reserved!',
+        `Tracking code: ${result.trackingCode}\n\nEstimated cost: ${result.quotedCurrency} ${(result.quotedRateCents/100).toLocaleString()}\n\nOpen the Shipments tab to track your cargo.`,
         [{ text: 'OK', onPress: () => setForm(INITIAL_FORM) }]
       );
-    } catch {
-      Alert.alert('Error', 'Failed to submit booking. Please try again.');
+    } catch (err) {
+      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to submit booking. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
