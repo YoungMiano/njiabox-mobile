@@ -9,6 +9,7 @@ jobs:
   build:
     name: Build Android APK
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,26 +19,32 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm install --ignore-scripts
-
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+          java-version: '17'
+          distribution: 'temurin'
 
-      - name: Build APK via EAS
-        run: eas build --platform android --profile preview --non-interactive
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
 
-      - name: Download APK
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Generate native Android folder
+        run: npx expo prebuild --platform android --non-interactive
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build debug APK
         run: |
-          URL=$(eas build:list --platform android --status finished --limit 1 --json --non-interactive | python3 -c "import sys,json; print(json.load(sys.stdin)[0]['artifacts']['buildUrl'])")
-          curl -L "$URL" -o njiabox.apk
+          cd android
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: njiabox-android
-          path: njiabox.apk
+          name: njiabox-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
