@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE = 'http://192.168.88.226:3000/api/v1';
+const API_BASE = 'https://njiabox-api.onrender.com/api/v1';
 
 async function getToken(): Promise<string | null> {
   return AsyncStorage.getItem('accessToken');
