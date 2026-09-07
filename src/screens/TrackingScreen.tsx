@@ -50,7 +50,8 @@ export function TrackingScreen() {
       const timeout = setTimeout(() => controller.abort(), 15000);
       const result = await api.listConsignments({ limit: 50 });
       clearTimeout(timeout);
-      setConsignments(result.items as Consignment[]);
+      const items = (result as any).items ?? result ?? [];
+      setConsignments(items as Consignment[]);
     } catch (e) {
       if (e instanceof Error && e.name === 'AbortError') {
         Alert.alert('Slow connection', 'Server is waking up, please try again in a moment.');

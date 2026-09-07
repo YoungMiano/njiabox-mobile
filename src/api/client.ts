@@ -63,7 +63,10 @@ export const api = {
   // Consignments
   listConsignments: (params?: { status?: string; limit?: number; offset?: number }) => {
     const q = new URLSearchParams(params as Record<string, string> ?? {}).toString();
-    return request<{ items: unknown[]; total: number }>('GET', `/consignments${q ? `?${q}` : ''}`);
+    return request<unknown>('GET', `/consignments${q ? '?' + q : ''}`).then((res: any) => ({
+    items: res.items ?? res ?? [],
+    total: res.total ?? (Array.isArray(res) ? res.length : 0),
+  }));
   },
   createConsignment: (body: unknown) => request('POST', '/consignments', body),
   getConsignment: (trackingCode: string) => request('GET', `/consignments/${trackingCode}`),
