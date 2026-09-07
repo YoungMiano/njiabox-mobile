@@ -46,10 +46,17 @@ export function TrackingScreen() {
 
   const load = async () => {
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
       const result = await api.listConsignments({ limit: 50 });
+      clearTimeout(timeout);
       setConsignments(result.items as Consignment[]);
     } catch (e) {
-      Alert.alert('Error', e instanceof Error ? e.message : 'Failed to load shipments');
+      if (e instanceof Error && e.name === 'AbortError') {
+        Alert.alert('Slow connection', 'Server is waking up, please try again in a moment.');
+      } else {
+        Alert.alert('Error', e instanceof Error ? e.message : 'Failed to load shipments');
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
