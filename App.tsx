@@ -9,6 +9,7 @@ import { LoginScreen } from './src/screens/LoginScreen';
 import { RegisterScreen } from './src/screens/RegisterScreen';
 import { MerchantBookingScreen } from './src/screens/MerchantBookingScreen';
 import { TransporterDashboardScreen } from './src/screens/TransporterDashboardScreen';
+import { TransporterCapacityScreen } from './src/screens/TransporterCapacityScreen';
 import { TrackingScreen } from './src/screens/TrackingScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { Colors } from './src/theme';
@@ -35,6 +36,11 @@ function AppNavigator() {
 
   const isTransporter = user.role === 'Transporter';
 
+  const tabOpts = (label: string, emoji: string) => ({
+    tabBarLabel: label,
+    tabBarIcon: () => <Text>{emoji}</Text>,
+  });
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -46,16 +52,15 @@ function AppNavigator() {
       }}
     >
       {isTransporter ? (
-        <Tab.Screen name="Dashboard" component={TransporterDashboardScreen}
-          options={{ tabBarLabel: 'My Cargo', tabBarIcon: () => <Text>🚛</Text> }} />
+        <>
+          <Tab.Screen name="MyCargo" component={TransporterDashboardScreen} options={tabOpts('My Cargo', '🚛')} />
+          <Tab.Screen name="Register" component={TransporterCapacityScreen} options={tabOpts('Register', '➕')} />
+        </>
       ) : (
-        <Tab.Screen name="Book" component={MerchantBookingScreen}
-          options={{ tabBarLabel: 'Book', tabBarIcon: () => <Text>📦</Text> }} />
+        <Tab.Screen name="Book" component={MerchantBookingScreen} options={tabOpts('Book', '📦')} />
       )}
-      <Tab.Screen name="Tracking" component={TrackingScreen}
-        options={{ tabBarLabel: 'Shipments', tabBarIcon: () => <Text>🔍</Text> }} />
-      <Tab.Screen name="Profile" component={ProfileScreen}
-        options={{ tabBarLabel: 'Profile', tabBarIcon: () => <Text>👤</Text> }} />
+      <Tab.Screen name="Shipments" component={TrackingScreen} options={tabOpts('Shipments', '🔍')} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={tabOpts('Profile', '👤')} />
     </Tab.Navigator>
   );
 }
