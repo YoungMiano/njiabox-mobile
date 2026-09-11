@@ -78,6 +78,11 @@ export const api = {
     return request<unknown[]>('GET', `/transporter-capacities${q ? `?${q}` : ''}`);
   },
   createCapacity: (body: unknown) => request('POST', '/transporter-capacities', body),
+  listMyCapacities: async () => {
+    const res = await request<any>('GET', '/transporter-capacities/my');
+    return Array.isArray(res) ? res : (res?.data ?? []);
+  },
+  runBinPack: (capacityId: string) => request('POST', `/transporter-capacities/${capacityId}/run-bin-pack`),
 
   // Delivery
   generateOtp: (consignmentId: string) => request('POST', `/consignments/${consignmentId}/generate-otp`),
