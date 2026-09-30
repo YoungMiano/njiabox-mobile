@@ -24,8 +24,6 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - uses: android-actions/setup-android@v3
-
       - name: Prebuild Android
         run: npx expo prebuild --platform android --non-interactive
 
@@ -37,6 +35,8 @@ jobs:
           cd android
           ./gradlew assembleRelease --no-daemon \
             -PreactNativeArchitectures=arm64-v8a
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
 
       - name: Find APK
         run: find android -name "*.apk" -type f
