@@ -84,6 +84,12 @@ export const api = {
   },
   runBinPack: (capacityId: string) => request('POST', `/transporter-capacities/${capacityId}/run-bin-pack`),
 
+  // Payments
+  initiatePayment: (body: { consignmentId: string; phoneNumber: string; amountKes: number }) =>
+    request('POST', '/payments/mpesa/initiate', body),
+  checkPaymentStatus: (consignmentId: string) =>
+    request('GET', `/payments/status/${consignmentId}`),
+
   // Delivery
   generateOtp: (consignmentId: string) => request('POST', `/consignments/${consignmentId}/generate-otp`),
   verifyAndRelease: (body: { consignmentId: string; clearanceOtp: string }) =>

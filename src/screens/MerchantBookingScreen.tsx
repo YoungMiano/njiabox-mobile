@@ -1,3 +1,4 @@
+import { PaymentScreen } from './PaymentScreen';
 import { api } from '../api/client';
 // =============================================================================
 // NjiaBox Mobile – MerchantBookingScreen.tsx
@@ -112,6 +113,11 @@ export function MerchantBookingScreen(): React.JSX.Element {
     estimatedCostKes: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingPayment, setPendingPayment] = useState<{
+    consignmentId: string;
+    trackingCode: string;
+    amountKes: number;
+  } | null>(null);
   const [showRouteSelector, setShowRouteSelector] = useState(false);
 
   const selectedRouteDetails = ROUTES.find((r) => r.code === form.selectedRoute) ?? ROUTES[0]!;
@@ -155,17 +161,29 @@ export function MerchantBookingScreen(): React.JSX.Element {
         requiresRefrigeration: false,
         hasInsurance: false,
       }) as { trackingCode: string; quotedRateCents: number; quotedCurrency: string };
-      Alert.alert(
-        '✅ Booking Reserved!',
-        `Tracking code: ${result.trackingCode}\n\nEstimated cost: ${result.quotedCurrency} ${(result.quotedRateCents/100).toLocaleString()}\n\nOpen the Shipments tab to track your cargo.`,
-        [{ text: 'OK', onPress: () => setForm(INITIAL_FORM) }]
-      );
+      setPendingPayment({
+        consignmentId: result.id as string,
+        trackingCode: result.trackingCode as string,
+        amountKes: Math.round((result.quotedRateCents as number) / 100),
+      });
     } catch (err) {
       Alert.alert('Error', err instanceof Error ? err.message : 'Failed to submit booking. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   }, [form, preview]);
+
+  if (pendingPayment) {
+    return (
+      <PaymentScreen
+        consignmentId={pendingPayment.consignmentId}
+        trackingCode={pendingPayment.trackingCode}
+        amountKes={pendingPayment.amountKes}
+        onSuccess={() => { setPendingPayment(null); setForm(INITIAL_FORM); }}
+        onCancel={() => setPendingPayment(null)}
+      />
+    );
+  }
 
   return (
     <View style={styles.root}>
